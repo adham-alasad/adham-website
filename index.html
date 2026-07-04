@@ -61,15 +61,6 @@
     .av-reel-frame { height: 0; padding-top: 56.25%; }
   }
 
-  /* ── Double-click → true fullscreen mode ── */
-  .av-reel-frame:fullscreen { border: none; box-shadow: none; background: #000; aspect-ratio: auto; }
-  .av-reel-frame:fullscreen iframe { width: 100%; height: 100%; }
-  /* transparent layer that catches clicks over the video;
-     leaves the bottom strip free so the player controls stay clickable */
-  .av-reel-zoomzone {
-    position: absolute; top: 0; left: 0; right: 0; bottom: 72px;
-    z-index: 2; cursor: pointer;
-  }
 
   section h2, header h1 { font-family: 'Marcellus', serif; font-weight: 400; }
 </style>
@@ -130,20 +121,16 @@
     <div style="position: absolute; inset: -6%; background: radial-gradient(ellipse at center, rgba(196,148,90,0.18), transparent 70%); filter: blur(24px); pointer-events: none;"></div>
 
     <!-- Showreel — Bunny Stream embed, frame matches the 16:9 video exactly -->
-    <div class="av-reel-frame" id="reelFrame">
+    <div class="av-reel-frame">
       <iframe
         src="https://player.mediadelivery.net/embed/696843/38cceffc-07ff-4bbb-acf3-9a3fac626674?autoplay=true&loop=false&muted=true&preload=true&responsive=true"
         loading="lazy"
         title="Adham Visuals — Showreel"
-        allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;fullscreen;"
-        allowfullscreen="true"></iframe>
-      <div class="av-reel-zoomzone" id="reelZoomZone" title="Double-click to expand"></div>
+        allow="accelerometer;gyroscope;autoplay;encrypted-media"></iframe>
     </div>
   </div>
 
-  <p class="av-reveal" style="text-align: center; margin: 44px auto 0; font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(233,220,196,0.4);">Double-click the video to expand</p>
-
-  <p class="av-reveal" style="text-align: center; margin: 24px auto 0; font-size: 14px; letter-spacing: 0.08em; color: rgba(233,220,196,0.5); font-style: italic;">For full projects or custom requests, <a href="#contact" style="color: #d9b988; text-decoration: none; border-bottom: 1px solid rgba(217,185,136,0.4);">contact me directly</a>.</p>
+  <p class="av-reveal" style="text-align: center; margin: 44px auto 0; font-size: 14px; letter-spacing: 0.08em; color: rgba(233,220,196,0.5); font-style: italic;">For full projects or custom requests, <a href="#contact" style="color: #d9b988; text-decoration: none; border-bottom: 1px solid rgba(217,185,136,0.4);">contact me directly</a>.</p>
 </section>
 
 <!-- ══════════ 3 · SERVICES ══════════ -->
@@ -241,50 +228,6 @@
     els.forEach(function (el) { obs.observe(el); });
   })();
 
-  // Showreel: double-click to fill the screen, double-click again to restore.
-  // Single click on the video toggles play/pause (via the Bunny player.js API).
-  (function () {
-    var frame = document.getElementById('reelFrame');
-    var zone = document.getElementById('reelZoomZone');
-    if (!frame || !zone) return;
-    var iframe = frame.querySelector('iframe');
-    var playing = true; // autoplay=true in the embed URL
-    var clickTimer = null;
-
-    function playerCmd(method) {
-      try {
-        iframe.contentWindow.postMessage(JSON.stringify({
-          context: 'player.js', version: '0.0.11', method: method
-        }), '*');
-      } catch (e) {}
-    }
-
-    function toggleExpand() {
-      var fsEl = document.fullscreenElement || document.webkitFullscreenElement;
-      if (fsEl) {
-        (document.exitFullscreen || document.webkitExitFullscreen).call(document);
-      } else {
-        var req = frame.requestFullscreen || frame.webkitRequestFullscreen;
-        if (req) req.call(frame);
-      }
-    }
-
-    zone.addEventListener('click', function () {
-      // wait to make sure it isn't the first half of a double-click
-      if (clickTimer) return;
-      clickTimer = setTimeout(function () {
-        clickTimer = null;
-        playing = !playing;
-        playerCmd(playing ? 'play' : 'pause');
-      }, 260);
-    });
-
-    zone.addEventListener('dblclick', function (e) {
-      e.preventDefault();
-      if (clickTimer) { clearTimeout(clickTimer); clickTimer = null; }
-      toggleExpand();
-    });
-  })();
 </script>
 
 </body>

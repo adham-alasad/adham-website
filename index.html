@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ADHAM VISUALS — 3D Animator &amp; Visual Artist</title>
+<title>ADHAM XYZ — 3D Animator &amp; Visual Artist</title>
 <meta name="description" content="Custom 3D visuals for DJs, clubs, weddings, concerts, projection mapping, and immersive events.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -61,6 +61,21 @@
     .av-reel-frame { height: 0; padding-top: 56.25%; }
   }
 
+  /* ── Double-click zoom: expanded showreel fills the screen ── */
+  .av-reel-frame.av-expanded {
+    position: fixed; inset: 0; z-index: 999;
+    aspect-ratio: auto; width: 100vw; height: 100vh;
+    border: none; box-shadow: none; background: #000;
+  }
+  /* transparent layer that catches double-clicks over the video;
+     leaves the bottom strip free so the player controls stay clickable */
+  .av-reel-zoomzone {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 72px;
+    z-index: 2; cursor: zoom-in;
+  }
+  .av-reel-frame.av-expanded .av-reel-zoomzone { cursor: zoom-out; }
+  body.av-noscroll { overflow: hidden; }
+
   section h2, header h1 { font-family: 'Marcellus', serif; font-weight: 400; }
 </style>
 </head>
@@ -68,7 +83,7 @@
 
 <!-- ══════════ NAV ══════════ -->
 <nav>
-  <a href="#top" class="av-logo">ADHAM&nbsp;VISUALS</a>
+  <a href="#top" class="av-logo">ADHAM&nbsp;XYZ</a>
   <div class="av-navlinks">
     <a href="#showreel" class="av-navlink">Showreel</a>
     <a href="#services" class="av-navlink">Services</a>
@@ -87,7 +102,7 @@
 
   <p style="margin: 0 0 26px; font-size: 12px; letter-spacing: 0.5em; text-transform: uppercase; color: rgba(217,185,136,0.75); animation: av-fade-up 1.2s 0.1s cubic-bezier(0.22,1,0.36,1) both;">3D Animator · Visual Artist · Jordan</p>
 
-  <h1 style="margin: 0; font-size: clamp(52px, 10.5vw, 150px); line-height: 1.02; letter-spacing: 0.08em; color: #f0e5cd; text-shadow: 0 0 80px rgba(201,168,122,0.25); animation: av-fade-up 1.4s 0.25s cubic-bezier(0.22,1,0.36,1) both;">ADHAM<br>VISUALS</h1>
+  <h1 style="margin: 0; font-size: clamp(52px, 10.5vw, 150px); line-height: 1.02; letter-spacing: 0.08em; color: #f0e5cd; text-shadow: 0 0 80px rgba(201,168,122,0.25); animation: av-fade-up 1.4s 0.25s cubic-bezier(0.22,1,0.36,1) both;">ADHAM<br>XYZ</h1>
 
   <div style="width: 76px; height: 1px; margin: 38px 0; background: linear-gradient(to right, transparent, rgba(201,168,122,0.8), transparent); animation: av-fade-up 1.4s 0.45s cubic-bezier(0.22,1,0.36,1) both;"></div>
 
@@ -120,17 +135,20 @@
     <div style="position: absolute; inset: -6%; background: radial-gradient(ellipse at center, rgba(196,148,90,0.18), transparent 70%); filter: blur(24px); pointer-events: none;"></div>
 
     <!-- Showreel — Bunny Stream embed, frame matches the 16:9 video exactly -->
-    <div class="av-reel-frame">
+    <div class="av-reel-frame" id="reelFrame">
       <iframe
         src="https://player.mediadelivery.net/embed/696843/38cceffc-07ff-4bbb-acf3-9a3fac626674?autoplay=true&loop=false&muted=true&preload=true&responsive=true"
         loading="lazy"
         title="Adham Visuals — Showreel"
         allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;fullscreen;"
         allowfullscreen="true"></iframe>
+      <div class="av-reel-zoomzone" id="reelZoomZone" title="Double-click to expand"></div>
     </div>
   </div>
 
-  <p class="av-reveal" style="text-align: center; margin: 44px auto 0; font-size: 14px; letter-spacing: 0.08em; color: rgba(233,220,196,0.5); font-style: italic;">For full projects or custom requests, <a href="#contact" style="color: #d9b988; text-decoration: none; border-bottom: 1px solid rgba(217,185,136,0.4);">contact me directly</a>.</p>
+  <p class="av-reveal" style="text-align: center; margin: 44px auto 0; font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(233,220,196,0.4);">Double-click the video to expand</p>
+
+  <p class="av-reveal" style="text-align: center; margin: 24px auto 0; font-size: 14px; letter-spacing: 0.08em; color: rgba(233,220,196,0.5); font-style: italic;">For full projects or custom requests, <a href="#contact" style="color: #d9b988; text-decoration: none; border-bottom: 1px solid rgba(217,185,136,0.4);">contact me directly</a>.</p>
 </section>
 
 <!-- ══════════ 3 · SERVICES ══════════ -->
@@ -142,7 +160,7 @@
     <h2 style="margin: 0; font-size: clamp(34px, 5vw, 56px); letter-spacing: 0.06em; color: #f0e5cd;">What I Create</h2>
   </div>
 
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1px; max-width: 1120px; margin: 0 auto; background: rgba(201,168,122,0.16); border: 1px solid rgba(201,168,122,0.16);">
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 1px; max-width: 1120px; margin: 0 auto; background: rgba(201,168,122,0.16); border: 1px solid rgba(201,168,122,0.16);">
     <div class="av-reveal av-card">
       <p style="margin: 0 0 14px; font-family: 'Marcellus', serif; font-size: 15px; letter-spacing: 0.2em; color: rgba(217,185,136,0.85);">01</p>
       <h3 style="margin: 0 0 12px; font-family: 'Marcellus', serif; font-weight: 400; font-size: 22px; letter-spacing: 0.04em; color: #ecdfc4;">Custom DJ Visuals</h3>
@@ -165,16 +183,11 @@
     </div>
     <div class="av-reveal av-card">
       <p style="margin: 0 0 14px; font-family: 'Marcellus', serif; font-size: 15px; letter-spacing: 0.2em; color: rgba(217,185,136,0.85);">05</p>
-      <h3 style="margin: 0 0 12px; font-family: 'Marcellus', serif; font-weight: 400; font-size: 22px; letter-spacing: 0.04em; color: #ecdfc4;">3D Animation</h3>
-      <p style="margin: 0; font-size: 14px; line-height: 1.75; color: rgba(233,220,196,0.5);">Cinematic animation for screens of any scale.</p>
-    </div>
-    <div class="av-reveal av-card">
-      <p style="margin: 0 0 14px; font-family: 'Marcellus', serif; font-size: 15px; letter-spacing: 0.2em; color: rgba(217,185,136,0.85);">06</p>
       <h3 style="margin: 0 0 12px; font-family: 'Marcellus', serif; font-weight: 400; font-size: 22px; letter-spacing: 0.04em; color: #ecdfc4;">Immersive Experiences</h3>
       <p style="margin: 0; font-size: 14px; line-height: 1.75; color: rgba(233,220,196,0.5);">Room-scale visual worlds for installations and events.</p>
     </div>
     <div class="av-reveal av-card">
-      <p style="margin: 0 0 14px; font-family: 'Marcellus', serif; font-size: 15px; letter-spacing: 0.2em; color: rgba(217,185,136,0.85);">07</p>
+      <p style="margin: 0 0 14px; font-family: 'Marcellus', serif; font-size: 15px; letter-spacing: 0.2em; color: rgba(217,185,136,0.85);">06</p>
       <h3 style="margin: 0 0 12px; font-family: 'Marcellus', serif; font-weight: 400; font-size: 22px; letter-spacing: 0.04em; color: #ecdfc4;">Visual Identity for Live Shows</h3>
       <p style="margin: 0; font-size: 14px; line-height: 1.75; color: rgba(233,220,196,0.5);">A cohesive visual language across an entire performance.</p>
     </div>
@@ -183,16 +196,10 @@
 
 <!-- ══════════ 4 · ABOUT ══════════ -->
 <section id="about" style="position: relative; padding: clamp(90px, 12vw, 160px) clamp(24px, 6vw, 80px); background: #070605;">
-  <div style="max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: clamp(40px, 6vw, 80px); align-items: center;">
-    <div class="av-reveal" style="position: relative;">
-      <div style="position: absolute; inset: -5%; background: radial-gradient(ellipse at center, rgba(196,148,90,0.14), transparent 70%); filter: blur(20px);"></div>
-      <img src="assets/arches-blooms.jpg" alt="3D render — arches with luminous blossoms" style="position: relative; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border: 1px solid rgba(201,168,122,0.3); box-shadow: 0 24px 70px rgba(0,0,0,0.8); display: block;">
-    </div>
-    <div class="av-reveal">
-      <p style="margin: 0 0 18px; font-size: 12px; letter-spacing: 0.5em; text-transform: uppercase; color: rgba(217,185,136,0.7);">About</p>
-      <h2 style="margin: 0 0 28px; font-size: clamp(32px, 4.4vw, 48px); letter-spacing: 0.05em; line-height: 1.15; color: #f0e5cd;">Architecture, light,<br>and atmosphere.</h2>
-      <p style="margin: 0; font-size: 16px; line-height: 2; color: rgba(233,220,196,0.66); max-width: 480px;">I'm Adham, a 3D animator and visual artist creating cinematic visuals for live shows, DJs, weddings, and immersive experiences. My work combines architectural forms, dark atmospheres, warm lighting, and surreal 3D elements to create visuals that feel premium, emotional, and memorable.</p>
-    </div>
+  <div class="av-reveal" style="max-width: 720px; margin: 0 auto; text-align: center;">
+    <p style="margin: 0 0 18px; font-size: 12px; letter-spacing: 0.5em; text-transform: uppercase; color: rgba(217,185,136,0.7);">About</p>
+    <h2 style="margin: 0 0 28px; font-size: clamp(32px, 4.4vw, 48px); letter-spacing: 0.05em; line-height: 1.15; color: #f0e5cd;">I'm Adham Alasad.</h2>
+    <p style="margin: 0; font-size: 16px; line-height: 2; color: rgba(233,220,196,0.66);">A 3D artist based in Jordan, creating custom visuals for DJs, clubs, weddings, concerts, and immersive events. From projection mapping to full live-show visual identities, I build cinematic 3D worlds designed to move with the music and make every event unforgettable.</p>
   </div>
 </section>
 
@@ -207,15 +214,15 @@
     <p style="margin: 0 0 52px; font-size: 16px; line-height: 1.8; color: rgba(233,220,196,0.66);">For custom visuals, DJ content, projection mapping, or event visuals, contact me directly.</p>
 
     <div style="display: flex; gap: 18px; justify-content: center; flex-wrap: wrap;">
-      <a href="https://www.instagram.com/adham_alasad9/" target="_blank" rel="noopener" class="av-btn-contact">Instagram</a>
-      <a href="https://wa.link/xuybpn" target="_blank" rel="noopener" class="av-btn-contact">WhatsApp</a>
       <a href="mailto:adhamalasad99@gmail.com" class="av-btn-contact">Email</a>
+      <a href="https://wa.link/xuybpn" target="_blank" rel="noopener" class="av-btn-contact">WhatsApp</a>
       <a href="tel:+962779997166" class="av-btn-contact">Call</a>
+      <a href="https://www.instagram.com/adham_alasad9/" target="_blank" rel="noopener" class="av-btn-contact">Instagram</a>
     </div>
   </div>
 
   <footer style="margin-top: clamp(80px, 10vw, 130px); padding-top: 34px; border-top: 1px solid rgba(201,168,122,0.14); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; max-width: 1120px; margin-left: auto; margin-right: auto;">
-    <span style="font-family: 'Marcellus', serif; font-size: 14px; letter-spacing: 0.3em; color: rgba(233,220,196,0.55);">ADHAM VISUALS</span>
+    <span style="font-family: 'Marcellus', serif; font-size: 14px; letter-spacing: 0.3em; color: rgba(233,220,196,0.55);">ADHAM XYZ</span>
     <span style="font-size: 12px; letter-spacing: 0.2em; color: rgba(233,220,196,0.35);">3D ANIMATION · PROJECTION MAPPING · LIVE VISUALS — JORDAN</span>
   </footer>
 </section>
@@ -237,6 +244,50 @@
       });
     }, { threshold: 0.12 });
     els.forEach(function (el) { obs.observe(el); });
+  })();
+
+  // Showreel: double-click to fill the screen, double-click again to restore.
+  // Single click on the video toggles play/pause (via the Bunny player.js API).
+  (function () {
+    var frame = document.getElementById('reelFrame');
+    var zone = document.getElementById('reelZoomZone');
+    if (!frame || !zone) return;
+    var iframe = frame.querySelector('iframe');
+    var playing = true; // autoplay=true in the embed URL
+    var clickTimer = null;
+
+    function playerCmd(method) {
+      try {
+        iframe.contentWindow.postMessage(JSON.stringify({
+          context: 'player.js', version: '0.0.11', method: method
+        }), '*');
+      } catch (e) {}
+    }
+
+    function toggleExpand() {
+      var expanded = frame.classList.toggle('av-expanded');
+      document.body.classList.toggle('av-noscroll', expanded);
+    }
+
+    zone.addEventListener('click', function () {
+      // wait to make sure it isn't the first half of a double-click
+      if (clickTimer) return;
+      clickTimer = setTimeout(function () {
+        clickTimer = null;
+        playing = !playing;
+        playerCmd(playing ? 'play' : 'pause');
+      }, 260);
+    });
+
+    zone.addEventListener('dblclick', function (e) {
+      e.preventDefault();
+      if (clickTimer) { clearTimeout(clickTimer); clickTimer = null; }
+      toggleExpand();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && frame.classList.contains('av-expanded')) toggleExpand();
+    });
   })();
 </script>
 
